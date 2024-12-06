@@ -7,7 +7,7 @@ img = cv2.imread('image.png')
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # Aplicar un filtro de la media a la imagen
-#blurred = cv2.blur(gray, (5, 5))
+# blurred = cv2.blur(gray, (5, 5))
 
 # Detectar bordes usando el algoritmo de Canny
 edges = cv2.Canny(gray, 60, 70)
