@@ -46,6 +46,11 @@ class ImageEditor(QMainWindow):
         canny_button.clicked.connect(self.apply_canny)
         sidebar.addWidget(canny_button)
 
+        # Canny edge detection button
+        canny_button = QPushButton("Apply Segmentation")
+        canny_button.clicked.connect(self.image_segmentation)
+        sidebar.addWidget(canny_button)
+
         # Add sidebar to the layout
         main_layout.addLayout(sidebar, 1)
 
@@ -82,6 +87,25 @@ class ImageEditor(QMainWindow):
             self.display_image()
         else:
             self.image_label.setText("No Image Loaded")
+
+    def image_segmentation(self):
+        if self.image is not None:
+            # Convert to grayscale
+            gray_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+
+            # Apply GaussianBlur to reduce noise and improve segmentation
+            blurred_image = cv2.GaussianBlur(gray_image, (5, 5), 0)
+
+            # Apply Otsu's thresholding for segmentation
+            _, segmented_image = cv2.threshold(blurred_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+            # Convert segmented image back to 3-channel image for display
+            segmented_colored = cv2.cvtColor(segmented_image, cv2.COLOR_GRAY2BGR)
+            self.image = segmented_colored
+            self.display_image()
+        else:
+            self.image_label.setText("No Image Loaded")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
