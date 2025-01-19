@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 IMAGES_DIR = "/home/sergio/.cache/kagglehub/datasets/pkdarabi/bone-fracture-detection-computer-vision-project/versions/2"
 FOLDER = "BoneFractureYolo8/test/images"
-IMAGE_NAME = "image1_1284_png.rf.45c8239cf68c001ba91d7d002729eec7.jpg"
+IMAGE_NAME = "distal-humerus-fracture-1_jpg.rf.831cb137cfcbde1079f86abd5f5f2867.jpg"
 
 image_path = os.path.join(IMAGES_DIR, FOLDER, IMAGE_NAME)
 
@@ -16,14 +16,17 @@ frame = cv2.imread(image_path)
 H, W, _ = frame.shape
 
 # cargo modelo oentrenado
-model_path = "/home/sergio/Repositorios/Bones-Fracture/runs/detect/train/weights/best.pt"
+model_path = "/home/sergio/Repositorios/Bones-Fracture/runs/detect/train3/weights/best.pt"
+
+print(os.path.exists(model_path))  # Debería imprimir True
+print(os.path.exists(image_path)) # Debería imprimir True
 
 model = YOLO(model_path)
 
-threshold = 0.1 # Umbral para filtrar detecciones (por debajo de este score no dtecta)
+threshold = 0.5# Umbral para filtrar detecciones (por debajo de este score no dtecta)
 
 #procesar la imagen
-results =  model(frame)
+results =  model(frame)[0]
 
 #plot boxes
 for result in results.boxes.data.tolist():

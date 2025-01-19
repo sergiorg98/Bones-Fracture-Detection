@@ -1,7 +1,7 @@
 import cv2
 
 # Cargar la imagen
-img = cv2.imread('image.png')
+img = cv2.imread('hueso.png')
 
 # Convertir la imagen a escala de grises
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -10,7 +10,7 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 # blurred = cv2.blur(gray, (5, 5))
 
 # Detectar bordes usando el algoritmo de Canny
-edges = cv2.Canny(gray, 60, 70)
+edges = cv2.Canny(gray, 70, 150)
 
 # Encontrar contornos en la imagen
 contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
