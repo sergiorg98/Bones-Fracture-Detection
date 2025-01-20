@@ -9,4 +9,4 @@ folder = "BoneFractureYolo8"
 model = YOLO("yolo11s.yaml")
 
 # Train the model
-results = model.train(data=os.path.join(path,  folder,  "data.yaml"), epochs=100, imgsz=640) # Train the model
+results = model.train(data=os.path.join(path,  folder,  "data.yaml"), epochs=100, imgsz=640, augment = True, flipud=0.5, fliplr=0.5, scale=0.5, shear=0.2, mosaic=1.0, mixup=0.0) # Train the model
