@@ -4,11 +4,10 @@ import random
 from ultralytics import YOLO
 import matplotlib.pyplot as plt
 
-IMAGES_DIR = "/home/sergio/.cache/kagglehub/datasets/pkdarabi/bone-fracture-detection-computer-vision-project/versions/2"
-FOLDER_IMAGES = "BoneFractureYolo8/valid/images"
+IMAGES_DIR = "/home/sergio/Repositorios/Bones-Fracture/dataset"
+FOLDER_IMAGES = "test/images"
 FOLDER_LABELS = "BoneFractureYolo8/valid/labels"
-IMAGE_NAME = "distal-humerus-fracture-1_jpg.rf.831cb137cfcbde1079f86abd5f5f2867.jpg"
-MODEL_PATH = "/home/sergio/Repositorios/Bones-Fracture/runs/detect/train/weights/best.pt"
+MODEL_PATH = "/home/sergio/Repositorios/Bones-Fracture/runs/detect/train9/weights/best.pt"
 
 class_names = ['elbow positive', 'fingers positive', 'forearm fracture', 'humerus fracture', 'humerus', 'shoulder fracture', 'wrist positive']
 
@@ -55,7 +54,7 @@ for i, image_file in enumerate(random_test_images):
             cv2.rectangle(image, (x_min, label_ymin - label_size[1] - 10), (x_min + label_size[0], label_ymin + 5), (0, 255, 0), -1)
             cv2.putText(image, label, (x_min, label_ymin - 7), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
             # Add the image name to the plot
-            axs[row, col].set_title(image_file, fontsize=10)
+            # axs[row, col].set_title(image_file, fontsize=10)
 
     # Plot the image with predictions
     row = i // 4

@@ -3,8 +3,8 @@ import os
 from ultralytics import YOLO
 import matplotlib.pyplot as plt
 
-IMAGES_DIR = "/home/sergio/.cache/kagglehub/datasets/pkdarabi/bone-fracture-detection-computer-vision-project/versions/2"
-FOLDER = "BoneFractureYolo8/test/images"
+IMAGES_DIR = "/home/sergio/Repositorios/Bones-Fracture/dataset"
+FOLDER = "/test/images"
 IMAGE_NAME = "image1_145_png.rf.a69d928d011a93d25a95b7b8380ea25d.jpg"
 
 image_path = os.path.join(IMAGES_DIR, FOLDER, IMAGE_NAME)

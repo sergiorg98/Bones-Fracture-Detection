@@ -1,12 +1,12 @@
 import os
-import kagglehub
+# import kagglehub
 from ultralytics import YOLO
-import shutil
+# import shutil
 
 
-path = kagglehub.dataset_download("pkdarabi/bone-fracture-detection-computer-vision-project")
-folder = "BoneFractureYolo8"
-model = YOLO("yolo11s.yaml")
+# path = kagglehub.dataset_download("dataset")
+folder = "/home/sergio/Repositorios/Bones-Fracture/dataset"
+model = YOLO("yolo11m.yaml")
 
 # Train the model
-results = model.train(data=os.path.join(path,  folder,  "data.yaml"), epochs=100, imgsz=640, augment = True, flipud=0.5, fliplr=0.5, scale=0.5, shear=0.2, mosaic=1.0, mixup=0.0) # Train the model
+results = model.train(data=os.path.join(folder,  "data.yaml"), epochs=100) # Train the model
