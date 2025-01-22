@@ -8,6 +8,12 @@ from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtCore import Qt
 from ultralytics import YOLO
 
+from skimage.morphology import binary_erosion, rectangle
+from skimage.measure import label, regionprops_table
+from skimage.color import label2rgb
+
+import numpy as np
+
 YOLO_MODEL_PATH = "runs/detect/train9/weights/best.pt"
 
 import cv2
@@ -65,6 +71,11 @@ class ImageEditor(QMainWindow):
         yolo_button = QPushButton("Detectar con Yolo")
         yolo_button.clicked.connect(self.yolo_detection)
         sidebar.addWidget(yolo_button)
+
+        # Canny edge detection button
+        distingir_regiones_button = QPushButton("Distinguir Regiones")
+        distingir_regiones_button.clicked.connect(self.distinguir_regiones)
+        sidebar.addWidget(distingir_regiones_button)
 
         # Threshold slider Yolo
         self.threshold_slider_yolo = QSlider(Qt.Horizontal)
@@ -137,6 +148,7 @@ class ImageEditor(QMainWindow):
             self.display_image()
         else:
             self.image_label.setText("No Image Loaded")
+
         
     def yolo_detection(self):
         if self.original_image is not None:
@@ -153,6 +165,44 @@ class ImageEditor(QMainWindow):
                     detected = cv2.rectangle(self.image, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 4)
                     self.image = detected
             self.display_image()
+
+        else:
+            self.image_label.setText("No Image Loaded")
+
+    def distinguir_regiones(self):
+        if self.image is not None:
+            # Erodes y dilates
+            kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (11, 1))
+            BW_eroded = cv2.erode(self.image, kernel, iterations=1)
+            BW_filled = cv2.morphologyEx(BW_eroded, cv2.MORPH_CLOSE, kernel)
+
+            # Cálculo de contornos
+            labeled_image = label(BW_filled)
+            colored_labels = label2rgb(labeled_image, bg_label=0)
+            props = regionprops_table(labeled_image, properties=['area', 'bbox', 'perimeter', 'eccentricity'])
+            areas = props['area']
+            sorted_indices = np.argsort(areas)[::-1]
+            main_regions = sorted_indices[:2]
+
+            bbox1 = props['bbox-0'][main_regions[0]], props['bbox-1'][main_regions[0]], props['bbox-2'][main_regions[0]], props['bbox-3'][main_regions[0]]
+            bbox2 = props['bbox-0'][main_regions[1]], props['bbox-1'][main_regions[1]], props['bbox-2'][main_regions[1]], props['bbox-3'][main_regions[1]]
+
+            self.image = self.original_image.copy()
+            cv2.rectangle(self.image, (bbox1[1], bbox1[0]), (bbox1[3], bbox1[2]), (0, 0, 255), 1)
+            cv2.rectangle(self.image, (bbox2[1], bbox2[0]), (bbox2[3], bbox2[2]), (255, 0, 0), 1)
+
+            # Dibujar rectángulo que coincide con bbox1 y bbox2
+            rect_x_min = max(bbox1[1], bbox2[1])
+            rect_x_max = min(bbox1[3], bbox2[3])
+            sep_min = max(bbox1[0], bbox2[0])
+            sep_max = min(bbox1[2], bbox2[2])
+            rect_width = rect_x_max - rect_x_min
+            rect_height = sep_max - sep_min
+
+            cv2.rectangle(self.image, (rect_x_min, sep_min), (rect_x_min + rect_width, sep_min + rect_height), (0, 255, 0), 2)
+            
+            self.display_image()
+
 
         else:
             self.image_label.setText("No Image Loaded")
